@@ -4,14 +4,14 @@ const fetch = require('node-fetch');
 
 router.get('/:organizationId', async (req, res) => {
   try {
-    const { organizationId } = req.params;
+    const organizationId = "create-makerspace";
     const authToken = req.headers.authorization;
 
     if (!authToken) {
       return res.status(401).json({ error: 'No authentication token provided' });
     }
 
-    const response = await fetch(`https://amilia.com/api/v3/organizations/${organizationId}/activities`, {
+    const response = await fetch(`https://amilia.com/api/v3/organizations/create-makerspace/activities`, {
       headers: {
         'Authorization': authToken,
         'Content-Type': 'application/json'
