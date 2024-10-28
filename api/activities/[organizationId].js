@@ -1,6 +1,16 @@
 const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', 'https://amilia-cal.netlify.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -13,7 +23,6 @@ module.exports = async (req, res) => {
       return res.status(401).json({ error: 'No authentication token provided' });
     }
 
-    // Ensure the token is in the correct Bearer format and validate its basic structure
     const token = authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}`;
     if (!token.split(' ')[1]?.startsWith('eyJ')) {
       return res.status(401).json({ error: 'Invalid token format' });
