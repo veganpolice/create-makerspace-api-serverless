@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
     console.log('Organization ID:', organizationId);
     console.log('Auth Token format:', token.substring(0, 20) + '...');
 
-    const apiUrl = `https://www.amilia.com/api/v3/en/organizations/${organizationId}/activities`;
+    const apiUrl = `https://www.amilia.com/api/V3/en/org/${organizationId}/activities`;
     console.log('Request URL:', apiUrl);
 
     const response = await fetch(apiUrl, {
