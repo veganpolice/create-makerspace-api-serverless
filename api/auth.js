@@ -14,11 +14,11 @@ module.exports = async (req, res) => {
 
     const credentials = Buffer.from(`${email}:${password}`).toString('base64');
     
-    const response = await fetch('https://www.amilia.com/api/v3/authenticate', {
-      method: 'POST',
+    const response = await fetch('https://www.amilia.com/api/v3/en/authenticate', {
+      method: 'GET',
       headers: {
         'Authorization': `Basic ${credentials}`,
-        'Content-Type': 'application/json'
+        'Accept': 'application/json'
       }
     });
 
