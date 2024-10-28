@@ -6,7 +6,9 @@
     "deploy": "vercel deploy"
   },
   "dependencies": {
-    "node-fetch": "^2.7.0"
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "vercel": "^32.5.0"
