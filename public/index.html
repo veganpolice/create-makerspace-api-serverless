@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amilia API Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #activities-section {
+            margin-top: 20px;
+            display: none;
+        }
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+        .success {
+            color: green;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Amilia API Client</h1>
+    
+    <form id="authForm" onsubmit="authenticate(event)">
+        <div class="form-group">
+            <label for="organization">Organization ID:</label>
+            <input type="text" id="organization" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+        </div>
+        <button type="submit">Authenticate</button>
+        <div id="authMessage"></div>
+    </form>
+
+    <div id="activities-section">
+        <h2>Activities</h2>
+        <button onclick="getActivities()">Get Activities</button>
+        <div id="activitiesList"></div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        async function authenticate(event) {
+            event.preventDefault();
+            const authMessage = document.getElementById('authMessage');
+            const activitiesSection = document.getElementById('activities-section');
+            
+            try {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const organization = document.getElementById('organization').value;
+                
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('amiliaToken', data.token);
+                    localStorage.setItem('organizationId', organization);
+                    authMessage.className = 'success';
+                    authMessage.textContent = 'Authentication successful!';
+                    activitiesSection.style.display = 'block';
+                } else {
+                    throw new Error(data.error || 'Authentication failed');
+                }
+            } catch (error) {
+                console.error('Authentication error:', error);
+                authMessage.className = 'error';
+                authMessage.textContent = error.message;
+                activitiesSection.style.display = 'none';
+            }
+        }
+
+        async function getActivities() {
+            const activitiesList = document.getElementById('activitiesList');
+            try {
+                const token = localStorage.getItem('amiliaToken');
+                const organizationId = localStorage.getItem('organizationId');
+                
+                if (!token || !organizationId) {
+                    throw new Error('Please authenticate first!');
+                }
+
+                const response = await fetch(`${API_BASE}/activities/${organizationId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch activities');
+                }
+
+                const activities = await response.json();
+                activitiesList.innerHTML = `<pre>${JSON.stringify(activities, null, 2)}</pre>`;
+            } catch (error) {
+                console.error('Error fetching activities:', error);
+                activitiesList.innerHTML = `<div class="error">${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

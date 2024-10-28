@@ -1,0 +1,14 @@
+{
+  "name": "makerspace-api",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel deploy"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.5.0"
+  }
+}
