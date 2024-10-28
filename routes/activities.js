@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
 
-router.get('/:organizationId', async (req, res) => {
+router.get('create-makerspace', async (req, res) => {
   try {
     const organizationId = "create-makerspace";
     const authToken = req.headers.authorization;
