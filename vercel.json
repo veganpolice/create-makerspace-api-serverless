@@ -4,6 +4,7 @@
     { "src": "api/**/*.js", "use": "@vercel/node" }
   ],
   "routes": [
+    { "src": "/api/activities/([^/]+)", "dest": "/api/activities/[organizationId].js?organizationId=$1" },
     { "src": "/api/(.*)", "dest": "/api/$1" }
   ],
   "env": {
