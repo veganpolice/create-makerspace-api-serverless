@@ -11,7 +11,7 @@ router.get('/:organizationId', async (req, res) => {
       return res.status(401).json({ error: 'No authentication token provided' });
     }
 
-    const response = await fetch(`https://api.amilia.com/api/v3/organizations/${organizationId}/activities`, {
+    const response = await fetch(`https://amilia.com/api/v3/organizations/${organizationId}/activities`, {
       headers: {
         'Authorization': authToken,
         'Content-Type': 'application/json'
