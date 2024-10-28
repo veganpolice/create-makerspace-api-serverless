@@ -13,14 +13,16 @@ module.exports = async (req, res) => {
       return res.status(401).json({ error: 'No authentication token provided' });
     }
 
-    // Log the request details for debugging
+    // Ensure the token is in the correct Bearer format
+    const token = authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}`;
+
     console.log('Making request to Amilia API');
     console.log('Organization ID:', organizationId);
-    console.log('Auth Token present:', !!authToken);
+    console.log('Auth Token format:', token.substring(0, 15) + '...');
 
-    const response = await fetch(`https://amilia.com/api/v3/en/organizations/${organizationId}/activities`, {
+    const response = await fetch(`https://amilia.com/api/v3/en/organizations/${organizationId}/programs/activities`, {
       headers: {
-        'Authorization': authToken,
+        'Authorization': token,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       }
@@ -31,7 +33,8 @@ module.exports = async (req, res) => {
       console.error('Amilia API Error:', {
         status: response.status,
         statusText: response.statusText,
-        body: errorText
+        body: errorText,
+        url: `https://amilia.com/api/v3/en/organizations/${organizationId}/programs/activities`
       });
       throw new Error(`Failed to fetch activities: ${response.status} ${response.statusText}`);
     }
@@ -42,7 +45,8 @@ module.exports = async (req, res) => {
     console.error('Error fetching activities:', error);
     res.status(500).json({ 
       error: 'Failed to fetch activities',
-      details: error.message
+      details: error.message,
+      hint: 'Please verify your organization ID and ensure your token is valid'
     });
   }
 };
