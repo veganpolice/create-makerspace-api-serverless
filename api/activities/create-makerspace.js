@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { organizationId } = req.query;
+    const organizationId = "create-makerspace"
     const authToken = req.headers.authorization;
 
     if (!authToken) {
