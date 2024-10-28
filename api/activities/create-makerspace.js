@@ -16,11 +16,16 @@ module.exports = async (req, res) => {
     // Ensure the token is in the correct Bearer format
     const token = authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}`;
 
-    console.log('Making request to Amilia API');
+    // Log the request details
+    console.log('Request Headers:', req.headers);
     console.log('Organization ID:', organizationId);
-    console.log('Auth Token format:', token.substring(0, 15) + '...');
+    console.log('Auth Token:', token);
 
-    const response = await fetch(`https://amilia.com/api/v3/en/organizations/${organizationId}/programs/activities`, {
+    // Try the base activities endpoint without 'programs'
+    const apiUrl = `https://amilia.com/api/v3/organizations/${organizationId}/activities`;
+    console.log('Attempting to fetch from:', apiUrl);
+
+    const response = await fetch(apiUrl, {
       headers: {
         'Authorization': token,
         'Accept': 'application/json',
@@ -28,13 +33,18 @@ module.exports = async (req, res) => {
       }
     });
 
+    // Log the response details
+    console.log('Response Status:', response.status);
+    console.log('Response Headers:', response.headers);
+
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Amilia API Error:', {
+      console.error('Amilia API Error Details:', {
         status: response.status,
         statusText: response.statusText,
         body: errorText,
-        url: `https://amilia.com/api/v3/en/organizations/${organizationId}/programs/activities`
+        url: apiUrl,
+        headers: response.headers
       });
       throw new Error(`Failed to fetch activities: ${response.status} ${response.statusText}`);
     }
@@ -42,11 +52,11 @@ module.exports = async (req, res) => {
     const activities = await response.json();
     res.json(activities);
   } catch (error) {
-    console.error('Error fetching activities:', error);
+    console.error('Detailed Error:', error);
     res.status(500).json({ 
       error: 'Failed to fetch activities',
       details: error.message,
-      hint: 'Please verify your organization ID and ensure your token is valid'
+      hint: 'Please verify: 1) Organization ID is correct, 2) Token is valid and not expired, 3) Token has correct permissions'
     });
   }
 };
