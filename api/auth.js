@@ -1,8 +1,10 @@
-const express = require('express');
-const router = express.Router();
 const fetch = require('node-fetch');
 
-router.post('/', async (req, res) => {
+module.exports = async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
     const { email, password } = req.body;
     
@@ -21,6 +23,12 @@ router.post('/', async (req, res) => {
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Authentication error:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText || 'No response body'
+      });
       throw new Error(`Authentication failed: ${response.statusText}`);
     }
 
@@ -28,8 +36,10 @@ router.post('/', async (req, res) => {
     res.json({ token: data.Token });
   } catch (error) {
     console.error('Authentication error:', error);
-    res.status(500).json({ error: 'Authentication failed' });
+    res.status(500).json({
+      error: 'Authentication failed',
+      details: error.message,
+      hint: 'Please verify your credentials and try again'
+    });
   }
-});
-
-module.exports = router;
+};
