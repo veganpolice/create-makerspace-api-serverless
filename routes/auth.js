@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
 
     const credentials = Buffer.from(`${email}:${password}`).toString('base64');
     
-    const response = await fetch('https://amilia.com/api/v3/authenticate', {
+    const response = await fetch('https://www.amilia.com/api/v3/authenticate', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${credentials}`,
