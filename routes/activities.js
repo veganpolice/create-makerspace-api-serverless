@@ -11,7 +11,7 @@ router.get('create-makerspace', async (req, res) => {
       return res.status(401).json({ error: 'No authentication token provided' });
     }
 
-    const response = await fetch(`https://amilia.com/api/v3/organizations/create-makerspace/activities`, {
+    const response = await fetch(`https://www.amilia.com/api/v3/en/organizations/create-makerspace/activities`, {
       headers: {
         'Authorization': authToken,
         'Content-Type': 'application/json'
