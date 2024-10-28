@@ -11,11 +11,11 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  if (req.method !== 'GET') {
+  if (req.method !== 'POST' && req.method !== 'GET') {
     return res.status(405).json({
       error: 'Method not allowed',
-      details: 'This endpoint only accepts GET requests',
-      hint: 'Use GET method for authentication'
+      details: 'This endpoint only accepts GET and POST requests',
+      hint: 'Use GET or POST method for authentication'
     });
   }
 
