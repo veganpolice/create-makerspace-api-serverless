@@ -23,7 +23,6 @@ module.exports = async (req, res) => {
     console.log('Organization ID:', organizationId);
     console.log('Auth Token format:', token.substring(0, 20) + '...');
 
-    // Updated API endpoint structure with www subdomain
     const apiUrl = `https://www.amilia.com/api/v3/en/organizations/${organizationId}/activities`;
     console.log('Request URL:', apiUrl);
 
@@ -46,7 +45,6 @@ module.exports = async (req, res) => {
         body: errorText || 'No response body'
       });
 
-      // Check specific error cases
       if (response.status === 404) {
         return res.status(404).json({
           error: 'Resource not found',
