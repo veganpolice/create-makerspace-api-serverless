@@ -23,8 +23,8 @@ module.exports = async (req, res) => {
     console.log('Organization ID:', organizationId);
     console.log('Auth Token format:', token.substring(0, 20) + '...');
 
-    // Updated API endpoint structure with /en but without /programs
-    const apiUrl = `https://amilia.com/api/v3/en/organizations/${organizationId}/activities`;
+    // Updated API endpoint structure with www subdomain
+    const apiUrl = `https://www.amilia.com/api/v3/en/organizations/${organizationId}/activities`;
     console.log('Request URL:', apiUrl);
 
     const response = await fetch(apiUrl, {
